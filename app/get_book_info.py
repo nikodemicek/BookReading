@@ -3,7 +3,7 @@ import re
 from bs4 import BeautifulSoup
 import openai
 
-from key import get_openai_key(), get_google_key()
+from app.key import get_openai_key, get_google_key
 
 
 def get_book_info(list_of_books):
@@ -38,7 +38,7 @@ def refine_search_term(query):
     response = openai.ChatCompletion.create(
       model="gpt-4",
       messages=[
-          {"role": "system", "content": "You are a helpful assistant that help identifying books."},
+          {"role": "system", "content": "You are a helpful assistant that helps identifying books."},
           {"role": "user", "content": f"""
             Given the input: '{query}', please identify what author and book title does the input represent. 
             The query is a text identified from an image of a book spine using OCR, therefore it may contain errors. 

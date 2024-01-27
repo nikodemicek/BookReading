@@ -3,6 +3,8 @@ import re
 import pytesseract
 import cv2
 
+#pytesseract.pytesseract.tesseract_cmd = r'C:\Users\NikodemOlsavsky\AppData\Local\Programs\Tesseract-OCR'
+
 
 def extract_text_and_numbers_with_spaces(text):
     return ' '.join(re.findall(r'[a-zA-Z0-9]+', text))
@@ -10,13 +12,13 @@ def extract_text_and_numbers_with_spaces(text):
 def read_book_text(image, book_box):
     x1, y1, x2, y2 = map(int, book_box)
     roi = image[y1:y2, x1:x2]
-
+    """
     # Determine if the ROI is vertically oriented - IMPROVE THIS!!!!!!!
     height, width = roi.shape[:2]
     spine_facing = height / width > 4
     if spine_facing:
         roi = cv2.rotate(roi, cv2.ROTATE_90_COUNTERCLOCKWISE)
-    
+    """
     # Use pytesseract to read text from the ROI
     text = pytesseract.image_to_string(roi, config='--psm 1')
     return text
