@@ -3,9 +3,7 @@ import re
 from bs4 import BeautifulSoup
 import openai
 
-from key import get_key()
-
-
+from key import get_openai_key(), get_google_key()
 
 
 def get_book_info(list_of_books):
@@ -34,7 +32,7 @@ def get_book_info(list_of_books):
     
     return predicted_books
 
-openai.api_key = get_key()
+openai.api_key = get_openai_key()
 
 def refine_search_term(query):
     response = openai.ChatCompletion.create(
@@ -55,7 +53,7 @@ def refine_search_term(query):
     return response.choices[0].message.content
 
 # Your API Key
-API_KEY = "AIzaSyB4phIbOx-K6tR34iIPySs8SoNAIcJDQ-A"
+GOOGLE_API_KEY = get_google_key()
 
 def search_book(search_string):
     """
@@ -63,7 +61,7 @@ def search_book(search_string):
     """
     
     # Construct the API URL
-    url = f"https://www.googleapis.com/books/v1/volumes?q={search_string}&langRestrict=en&key={API_KEY}"
+    url = f"https://www.googleapis.com/books/v1/volumes?q={search_string}&langRestrict=en&key={GOOGLE_API_KEY}"
 
     # Make the API request
     response = requests.get(url)
