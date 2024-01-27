@@ -10,9 +10,9 @@ cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rc
 cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.3  # set threshold for this model
 cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-InstanceSegmentation/mask_rcnn_X_101_32x8d_FPN_3x.yaml")
 
-def detect_books(image):
+def detect_objects(image, object_class):
     """
-    Detects books in an image.
+    Detects objects in an image.
 
     Parameters
     ----------
@@ -22,14 +22,13 @@ def detect_books(image):
     Returns
     -------
     book_boxes : numpy.ndarray
-        The bounding boxes of the detected books.
+        The bounding boxes of the detected objects.
     """
     # Make prediction
     predictor = DefaultPredictor(cfg)
     outputs = predictor(image)
 
-    # Filter predictions for books (book class in COCO dataset is 73)
-    book_indices = [i for i, label in enumerate(outputs["instances"].pred_classes) if label == 73]
-    book_boxes = outputs["instances"].pred_boxes.tensor[book_indices]
+    object_indices = [i for i, label in enumerate(outputs["instances"].pred_classes) if label == object_class]
+    object_boxes = outputs["instances"].pred_boxes.tensor[object_indices]
 
-    return book_boxes
+    return object_boxes

@@ -12,8 +12,8 @@ def main():
     # Step 2: Process the image (if necessary)
     processed_image = process_image(image_path)
 
-    # Step 3: Detect objects in the picture
-    detected_objects = detect_objects(processed_image)
+    # Step 3: Detect objects in the picture (73 is an object class book in the COCO dataset)
+    detected_objects = detect_objects(processed_image, 73)
 
     # Step 4: Detect text on each object
     detected_texts = detect_text_on_objects(processed_image, detected_objects)

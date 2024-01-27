@@ -3,6 +3,8 @@ import re
 from bs4 import BeautifulSoup
 import openai
 
+from key import get_key()
+
 
 
 
@@ -32,7 +34,7 @@ def get_book_info(list_of_books):
     
     return predicted_books
 
-openai.api_key = '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'
+openai.api_key = get_key()
 
 def refine_search_term(query):
     response = openai.ChatCompletion.create(
