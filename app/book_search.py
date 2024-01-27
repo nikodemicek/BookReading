@@ -2,24 +2,43 @@ import requests
 import re 
 from bs4 import BeautifulSoup
 import openai
+import json
 
 from app.key import get_openai_key, get_google_key
 
 
-def get_book_info(list_of_books):
+def jsonify_python_list(py_list):
+    """
+    Returns a json string from a python list
+    """
+    return json.dumps(py_list)
+
+
+def listify_json_string(json_string):
+    """
+    Returns a python list from a json string in a format of chatGPT response
+    """
+    return json.loads(json_string)
+
+def get_books_info(list_of_books):
     """
     Returns a list of books with their information
     """
+    chatgpt_json_input = jsonify_python_list(list_of_books)
+
+    # Get the response from chatGPT
+    chatgpt_response = refine_search_term(chatgpt_json_input)
+
+    # Convert the response to a python list
+    chatgpt_books_list = listify_json_string(chatgpt_response)
+
+
     predicted_books = []
-    for book in list_of_books:
+    for book in chatgpt_books_list:
         try:
             predicted_book = search_book(book)[0] 
         except (IndexError, TypeError):
             predicted_book =  {}
-
-        if not predicted_book:
-            predicted_book["title"] = refine_search_term(book)
-            predicted_book["authors"] = []
 
         # Safely get title and authors, handling the case where they might not be set
         book_title = predicted_book.get("title", "Book not found")
@@ -36,16 +55,16 @@ openai.api_key = get_openai_key()
 
 def refine_search_term(query):
     response = openai.ChatCompletion.create(
-      model="gpt-4",
+      model="gpt-4-turbo-preview",
       messages=[
           {"role": "system", "content": "You are a helpful assistant that helps identifying books."},
           {"role": "user", "content": f"""
-            Given the input: '{query}', please identify what author and book title does the input represent. 
-            The query is a text identified from an image of a book spine using OCR, therefore it may contain errors. 
+            Given the input json: '{query}', which is a list of scanned book titles. 
+            Please guess what author and book title does the each element in the input text represent. 
+            The elements are texts identified from an image of a book spine using OCR, therefore it is likely to contain errors. 
             Don't worry about that, just try to identify the book as best as you can. The query may contain some extra text, 
-            like publisher name or a quote from the book, please ignore those and focus solely on the author and the title.
-            Let your response be only and only the author and the title, nothing else. If you are unable to guess the book, or if the query is empty or nonsensical,
-            return only 'Book not found' and nothing else. It is very important that you return only the author and the title.
+            like publisher name, reviews or subtitles, please ignore those and focus solely on the author and the title.
+            Let your response be only and only the json string in the same format and order as the input json string, but with corrected author and title.
             """}]
     )
 
@@ -130,3 +149,8 @@ def get_goodreads_rating_info(book_title):
     else:
         print("Error:", response.status_code)
         return (0, 0)
+    
+
+def display_book_info(books, sort_key, descending=False):
+    filtered_books = [book for book in books if book.get(sort_key) is not None]
+    return sorted(filtered_books, key=lambda x: x.get(sort_key), reverse=descending)

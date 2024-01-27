@@ -2,7 +2,7 @@ from ui import get_user_input, display_results
 from image_processor import process_image
 from object_detector import detect_objects
 from text_detector import detect_text_on_objects
-#from api_searcher import search_api
+from book_search import get_book_info, display_book_info
 #from data_formatter import format_data_for_display
 
 def main():
@@ -18,14 +18,15 @@ def main():
     # Step 4: Detect text on each object
     detected_texts = detect_text_on_objects(processed_image, detected_objects)
     print(f"Number of books detected: {len(detected_texts)}")
+
     # Step 5: Search the detected text using an API
-    search_results = [search_api(text) for text in detected_texts]
+    book_results = [get_book_info(text) for text in detected_texts]
 
     # Step 6: Format the data for UI presentation
-    #formatted_data = format_data_for_display(detected_objects, search_results)
+    formatted_data = display_book_info(book_results, 'goodreads_avg_rating', descending=True)
 
     # Displaying the results in the UI
-    #display_results(formatted_data)
+    display_results(formatted_data)
 
 if __name__ == "__main__":
     main()
