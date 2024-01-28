@@ -1,4 +1,0 @@
-1. Productionalise = input of an image results in a list of books
-2. Brainstorm improvement of OCR
-3. Brainstorm improvement of book detection
-When using GPT, get all books at once, instead of asking the same thing over and over
