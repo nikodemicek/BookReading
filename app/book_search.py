@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import openai
 import json
 
-from app.key import get_openai_key, get_google_key
+from key import get_openai_key, get_google_key
 
 
 def jsonify_python_list(py_list):
@@ -24,14 +24,16 @@ def get_books_info(list_of_books):
     """
     Returns a list of books with their information
     """
-    chatgpt_json_input = jsonify_python_list(list_of_books)
 
+    print(list_of_books)
+    chatgpt_json_input = jsonify_python_list(list_of_books)
+    print(chatgpt_json_input)
     # Get the response from chatGPT
     chatgpt_response = refine_search_term(chatgpt_json_input)
-
+    print(chatgpt_response)
     # Convert the response to a python list
     chatgpt_books_list = listify_json_string(chatgpt_response)
-
+    print(chatgpt_books_list)
 
     predicted_books = []
     for book in chatgpt_books_list:
@@ -64,7 +66,9 @@ def refine_search_term(query):
             The elements are texts identified from an image of a book spine using OCR, therefore it is likely to contain errors. 
             Don't worry about that, just try to identify the book as best as you can. The query may contain some extra text, 
             like publisher name, reviews or subtitles, please ignore those and focus solely on the author and the title.
-            Let your response be only and only the json string in the same format and order as the input json string, but with corrected author and title.
+            Let your response be only and only the json string in the same format as the input json string inside [], but with corrected author and title.
+            Do not even put the json spec for the response. ```json\n my_output_string \n``` is a wrong response, I only want [my_output_string] 
+            where my_output_string is the corrected json string including both authors and book titles.
             """}]
     )
 
