@@ -99,6 +99,14 @@ def search_book(search_string):
             book_metadata["title"] = volume_info.get('title', 'Unknown Title')
             book_metadata["authors"] = volume_info.get('authors', [])
             book_metadata["description"] = volume_info.get('description', 'No Description')
+            
+            # Adding thumbnail URL
+            image_links = volume_info.get('imageLinks', {})
+            book_metadata["thumbnail"] = image_links.get('thumbnail', 'No Thumbnail')
+
+            # Adding average rating and ratings count
+            book_metadata["average_rating"] = volume_info.get('averageRating', 'No Rating')
+            book_metadata["ratings_count"] = volume_info.get('ratingsCount', 0)
             book_list.append(book_metadata)
         return book_list
     else:
