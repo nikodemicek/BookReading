@@ -22,7 +22,7 @@ def index():
 
     if request.method == 'POST':
         # handle the uploaded file
-        file = request.files['file']
+        file = request.files.get('file')
         if not file:
             flash('No file part')
             return redirect(request.url)
@@ -32,7 +32,7 @@ def index():
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
 
-            # Your existing logic
+            # Image processing steps:
             processed_image = process_image(file_path)
             detected_objects = detect_objects(processed_image, 73)
             detected_texts = detect_text_on_objects(processed_image, detected_objects)

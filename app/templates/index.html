@@ -2,28 +2,52 @@
 <html>
 <head>
     <title>Upload Image</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <form action="/" method="post" enctype="multipart/form-data" id="file-upload-form" class="uploader">
-    <div id="file-drag">
-        <div id="file-upload-btn" class="file-upload-btn">
-            <div class="image-upload-wrap">
-                <input class="file-upload-input" type='file' name='file' onchange="readURL(this);" accept="image/*" />
-                <div class="drag-text">
-                    <h3>Drag & drop a file or select add Image</h3>
-                </div>
-            </div>
-            <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger('click')">Add Image</button>
+    <form action="/" method="post" enctype="multipart/form-data" id="file-upload-form" class="uploader">
+        <div id="file-drag">
+            <!-- <div id="file-upload-btn" class="file-upload-btn"> -->
+                <!-- <div class="image-upload-wrap"> -->
+                    <input class="file-upload-input" type='file' name='file' onchange="fileSelectHandler(event);;" accept="image/*" />
+                    <div class="drag-text">
+                        <h3>Drag & drop a file or select add Image</h3>
+                    </div>
+                <!-- </div> -->
+                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger('click')">Add Image</button>
+            <!-- </div> -->
         </div>
-    </div>
-</form>
-
+    </form>
 
     {% if data %}
         <h2>Detected Books</h2>
-        {% for item in data %}
-            <p>{{ item }}</p> <!-- Modify this based on how your data is formatted -->
-        {% endfor %}
+        <table>
+            <!-- Table Headers -->
+            <tr>
+                <th>Thumbnail</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Description</th>
+                <th>Avg Rating</th>
+                <th>Ratings count</th>
+            </tr>
+
+            <!-- Table Rows -->
+            {% for item in data %}
+                <tr>
+                    <td>{{ item.thumbnail }}</td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.author }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.rating }}</td>
+                    <td>{{ item.rating_count }}</td>
+                </tr>
+            {% endfor %}
+        </table>
     {% endif %}
+
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
 </body>
 </html>
