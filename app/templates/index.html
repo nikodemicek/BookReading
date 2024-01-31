@@ -5,20 +5,12 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <form action="/" method="post" enctype="multipart/form-data" id="file-upload-form" class="uploader">
-        <div id="file-drag">
-            <!-- <div id="file-upload-btn" class="file-upload-btn"> -->
-                <!-- <div class="image-upload-wrap"> -->
-                    <input class="file-upload-input" type='file' name='file' onchange="fileSelectHandler(event);;" accept="image/*" />
-                    <div class="drag-text">
-                        <h3>Drag & drop a file or select add Image</h3>
-                    </div>
-                <!-- </div> -->
-                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger('click')">Add Image</button>
-            <!-- </div> -->
-        </div>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" id="file">
+        <input type="submit" value="Upload Image" name="submit">
     </form>
-
+    
+    <div class="table_container">
     {% if data %}
         <h2>Detected Books</h2>
         <table>
@@ -45,7 +37,7 @@
             {% endfor %}
         </table>
     {% endif %}
-
+    </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 

@@ -20,7 +20,7 @@ def read_book_text(image, book_box):
         roi = cv2.rotate(roi, cv2.ROTATE_90_COUNTERCLOCKWISE)
     """
     # Use pytesseract to read text from the ROI
-    text = pytesseract.image_to_string(roi, config='--psm 1')
+    text = pytesseract.image_to_string(roi, config='--psm 5')
     return text
 
 def detect_text_on_objects(processed_image, detected_objects):

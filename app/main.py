@@ -1,8 +1,10 @@
 from flask import Flask, request, render_template, flash, redirect
 from werkzeug.utils import secure_filename
 import os
+from key import get_flask_secret_key
 
 app = Flask(__name__)
+app.secret_key =   get_flask_secret_key()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
