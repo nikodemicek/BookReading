@@ -1,9 +1,18 @@
 from flask import Flask, request, render_template, flash, redirect, jsonify
 from flask_rq2 import RQ
+from redis import Redis
+from rq import Queue
 
 from werkzeug.utils import secure_filename
 import os
 from key import get_flask_secret_key
+import logging
+
+from utils.config import allowed_file
+from worker import conn
+import tasks
+
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 app.secret_key =   get_flask_secret_key()
@@ -11,31 +20,13 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 # RQ Configuration
-app.config['RQ_REDIS_URL'] = 'redis://localhost:6379/0'
+app.config['RQ_REDIS_URL'] = 'redis://redis:6379/0'
+
 rq = RQ(app)
-
-
-from image_processor import process_image
-from object_detector import detect_objects
-from text_detector import detect_text_on_objects
-from book_search import get_books_info, display_book_info
-
-from utils.config import allowed_file
-
-@rq.job
-def process_image_task(file_path):
-    # Image processing steps:
-
-    processed_image = process_image(file_path)
-    detected_objects = detect_objects(processed_image, 73)
-    detected_texts = detect_text_on_objects(processed_image, detected_objects)
-    book_results = get_books_info(detected_texts)
-    return display_book_info(book_results, 'goodreads_avg_rating', descending=True)
-
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+
     data = None 
 
     if request.method == 'POST':
@@ -49,9 +40,9 @@ def index():
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
-
             # Enqueue the background job
-            job = process_image_task.queue(file_path)
+            q = Queue(connection=conn)
+            job = q.enqueue(tasks.process_image_task, file_path)
             return jsonify({"job_id": job.get_id()}), 202
 
         else:
@@ -63,7 +54,7 @@ def index():
 @app.route('/results/<job_id>', methods=['GET'])
 def get_results(job_id):
     job = rq.get_queue().fetch_job(job_id)
-
+    logging.info(f'Job status: {job.get_status()}')
     if job.is_finished:
         return jsonify(job.result), 200
     elif job.is_failed:
@@ -74,5 +65,5 @@ def get_results(job_id):
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 80))
-    app.run(host='0.0.0.0', port=port)
+    #port = int(os.environ.get("PORT", 80))
+    app.run(host='0.0.0.0', port=80)

@@ -6,7 +6,7 @@
 </head>
 <body>
     <div id="upload-area">
-        <form id="upload-form" enctype="multipart/form-data">
+        <form id="upload-form" enctype="multipart/form-data" method="post" >
             <input type="file" name="file" id="file">
             <input type="submit" value="Upload Image" name="submit">
         </form>
@@ -14,7 +14,7 @@
 
     <div id="results"></div>
 
-    <div id="table_container" style="display: none;">
+    <div id="table-container" style="display: none;">
         <h2>Detected Books</h2>
         <table>
             <!-- Table will be populated with JavaScript -->

@@ -21,7 +21,8 @@ RUN pip install torch==2.1.0+cpu torchvision==0.16.0+cpu -f https://download.pyt
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the current directory contents into the container at /usr/src/app
+
+# Copy your application files to the container
 COPY . .
 
 # Make port 80 available to the world outside this container

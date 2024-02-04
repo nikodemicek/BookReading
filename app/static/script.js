@@ -1,33 +1,8 @@
-function submitFiles() {
-    let fileInput = document.getElementById('fileElem');
-    let formData = new FormData();
-
-    for (let i = 0; i < fileInput.files.length; i++) {
-        formData.append('file' + i, fileInput.files[i]);
-    }
-
-    // Example AJAX request (You need to replace 'your-server-endpoint' with your actual server URL)
-    fetch('your-server-endpoint', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Handle response data
-        console.log(data);
-        // Update the table-container with results
-        // For example:
-        // document.getElementById('table-container').innerHTML = '<table>...</table>';
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
 $(document).ready(function() {
     $('#upload-form').submit(function(e) {
         e.preventDefault();
         var formData = new FormData(this);
+        console.log("upload-form submitted!");
         $.ajax({
             type: 'POST',
             url: '/',
@@ -36,6 +11,7 @@ $(document).ready(function() {
             processData: false,
             success: function(response) {
                 // Start polling for status
+                console.log("job status checked!");
                 checkJobStatus(response.job_id);
             },
             error: function() {
@@ -50,12 +26,13 @@ function checkJobStatus(jobId) {
         type: 'GET',
         url: '/results/' + jobId,
         success: function(response) {
+            console.log("job status: ", response.status);
             if (response.status === 'Processing') {
                 // Poll every 2 seconds
                 setTimeout(function() { checkJobStatus(jobId); }, 2000);
             } else {
                 // Show table container and populate data
-                $('#table_container').show();
+                $('#table-container').show();
                 populateTable(response);
             }
         },
@@ -66,7 +43,7 @@ function checkJobStatus(jobId) {
 }
 
 function populateTable(data) {
-    var table = $('#table_container table');
+    var table = $('#table-container table');
     table.html(''); // Clear existing table data
 
     // Add table headers
