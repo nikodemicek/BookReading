@@ -1,28 +1,26 @@
-from flask import Flask, request, render_template, flash, redirect, jsonify
+from flask import  request, render_template, flash, redirect, jsonify
 from flask_rq2 import RQ
-from redis import Redis
-from rq import Queue
 
 from werkzeug.utils import secure_filename
 import os
-from key import get_flask_secret_key
 import logging
 
+from app import create_app
 from utils.config import allowed_file
 from worker import conn
-import tasks
+from tasks import process_image_task
+
 
 logging.basicConfig(level=logging.INFO)
 
-app = Flask(__name__)
-app.secret_key =   get_flask_secret_key()
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, 'uploads')
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
-# RQ Configuration
-app.config['RQ_REDIS_URL'] = 'redis://redis:6379/0'
-
+app = create_app()
 rq = RQ(app)
+
+from rq.job import Job
+from rq import Queue
+from worker import conn
+
+q = Queue(connection=conn)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -30,6 +28,7 @@ def index():
     data = None 
 
     if request.method == 'POST':
+
         # handle the uploaded file
         file = request.files.get('file')
         if not file:
@@ -40,9 +39,9 @@ def index():
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
+
             # Enqueue the background job
-            q = Queue(connection=conn)
-            job = q.enqueue(tasks.process_image_task, file_path)
+            job = q.enqueue_call(func='app.tasks.process_image_task', args=(file_path,), result_ttl=5000)
             return jsonify({"job_id": job.get_id()}), 202
 
         else:
@@ -53,7 +52,7 @@ def index():
 
 @app.route('/results/<job_id>', methods=['GET'])
 def get_results(job_id):
-    job = rq.get_queue().fetch_job(job_id)
+    job = Job.fetch(job_id, connection=conn)
     logging.info(f'Job status: {job.get_status()}')
     if job.is_finished:
         return jsonify(job.result), 200

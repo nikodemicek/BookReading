@@ -1,9 +1,6 @@
 import re 
 
 import pytesseract
-import cv2
-
-#pytesseract.pytesseract.tesseract_cmd = r'C:\Users\NikodemOlsavsky\AppData\Local\Programs\Tesseract-OCR'
 
 
 def extract_text_and_numbers_with_spaces(text):

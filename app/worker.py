@@ -2,8 +2,11 @@ import os
 
 import redis
 from rq import Worker, Queue, Connection
+from app import app
 
-listen = ['high', 'default', 'low']
+from app.tasks import process_image_task
+
+listen = ['default']
 
 redis_url = os.getenv('REDIS_URL', 'redis://redis:6379')
 

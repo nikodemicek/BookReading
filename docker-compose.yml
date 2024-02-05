@@ -22,7 +22,7 @@ services:
     networks:
       - mynetwork
   redis:
-    image: "redis:alpine"
+    image: "redis:latest"
     networks:
       - mynetwork
 

@@ -1,15 +1,16 @@
 import logging
 from rq.decorators import job
-from rq import Queue
-from worker import conn
+#from rq import Queue
+#from worker import conn
 
 from image_processor import process_image
 from object_detector import detect_objects
 from text_detector import detect_text_on_objects
 from book_search import get_books_info, display_book_info
+from app import app
 
 
-@job
+#@job
 def process_image_task(file_path):
 
     #q = Queue(connection=conn)
