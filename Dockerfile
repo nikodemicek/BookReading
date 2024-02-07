@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 
 # Copy your application files to the container
-COPY . .
+COPY ./app .
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
@@ -32,4 +32,4 @@ EXPOSE 80
 ENV NAME dockerenv
 
 # Run app.py when the container launches
-CMD ["python", "app/main.py"]
+CMD ["python", "main.py"]

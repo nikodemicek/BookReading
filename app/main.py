@@ -1,24 +1,32 @@
-from flask import  request, render_template, flash, redirect, jsonify
+from flask import  Flask, request, render_template, flash, redirect, jsonify
 from flask_rq2 import RQ
 
 from werkzeug.utils import secure_filename
 import os
 import logging
 
-from app import create_app
 from utils.config import allowed_file
 from worker import conn
 from tasks import process_image_task
+from key import get_flask_secret_key
 
 
 logging.basicConfig(level=logging.INFO)
 
-app = create_app()
+
+app = Flask(__name__)
 rq = RQ(app)
 
 from rq.job import Job
 from rq import Queue
 from worker import conn
+
+app.secret_key =  get_flask_secret_key()
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, 'uploads')
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
+# RQ Configuration
+app.config['RQ_REDIS_URL'] = 'redis://redis:6379/0'# Add app configuration and other setup here if needed.
 
 q = Queue(connection=conn)
 
@@ -41,7 +49,7 @@ def index():
             file.save(file_path)
 
             # Enqueue the background job
-            job = q.enqueue_call(func='app.tasks.process_image_task', args=(file_path,), result_ttl=5000)
+            job = q.enqueue(f=process_image_task, args=(file_path,), result_ttl=5000, job_timeout=600)
             return jsonify({"job_id": job.get_id()}), 202
 
         else:

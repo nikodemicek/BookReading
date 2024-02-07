@@ -10,11 +10,11 @@ services:
       - RQ_REDIS_URL=redis://redis:6379/0
     networks:
       - mynetwork
-    # volumes:
-    # - .:/app
   worker:
     build: .
-    command: rq worker
+    volumes:
+      - .:/app
+    command: python worker.py
     depends_on:
       - redis
     environment:
