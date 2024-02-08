@@ -2,20 +2,15 @@ import os
 
 import redis
 from rq import Worker, Queue, Connection
-
-from tasks import process_image_task
-
-import sys
-
-# Get the current file's directory
-current_file_directory = os.path.dirname(os.path.abspath(__file__))
-
-# Insert the current file's directory at the start of the PATH
-sys.path.insert(0, current_file_directory)
+import logging
+#from tasks import process_image_task
 
 listen = ['default']
 
-redis_url = os.getenv('REDIS_URL', 'redis://redis:6379')
+redis_url = os.getenv('REDIS_URL')
+
+logging.basicConfig(level=logging.INFO)
+
 
 conn = redis.from_url(redis_url)
 

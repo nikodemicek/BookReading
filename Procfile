@@ -1,2 +1,2 @@
-web: python app/main.py
-worker: rq worker --url $REDIS_URL
+web: python main.py
+worker: python worker.py

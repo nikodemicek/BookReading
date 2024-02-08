@@ -21,12 +21,14 @@ from rq.job import Job
 from rq import Queue
 from worker import conn
 
+redis_url = os.getenv('REDIS_URL')
+
 app.secret_key =  get_flask_secret_key()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 # RQ Configuration
-app.config['RQ_REDIS_URL'] = 'redis://redis:6379/0'# Add app configuration and other setup here if needed.
+app.config['RQ_REDIS_URL'] = redis_url
 
 q = Queue(connection=conn)
 
@@ -70,7 +72,6 @@ def get_results(job_id):
         return jsonify({"status": "Processing"}), 202
 
 
-
 if __name__ == '__main__':
-    #port = int(os.environ.get("PORT", 80))
-    app.run(host='0.0.0.0', port=80)
+    port = int(os.environ.get("PORT", 80))
+    app.run(host='0.0.0.0', port=port)
