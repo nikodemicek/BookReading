@@ -7,7 +7,7 @@ import logging
 
 listen = ['default']
 
-redis_url = os.getenv('REDIS_URL')
+redis_url = os.environ.get('REDIS_URL')
 
 logging.basicConfig(level=logging.INFO)
 

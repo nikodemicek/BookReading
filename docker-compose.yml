@@ -17,6 +17,8 @@ services:
     volumes:
       - .:/app
     command: python worker.py
+    env_file:
+      - .env
     depends_on:
       - redis
     environment:

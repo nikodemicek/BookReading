@@ -21,7 +21,7 @@ from rq.job import Job
 from rq import Queue
 from worker import conn
 
-redis_url = os.getenv('REDIS_URL')
+redis_url = os.environ.get('REDIS_URL')
 
 app.secret_key =  get_flask_secret_key()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
