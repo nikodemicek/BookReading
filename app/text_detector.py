@@ -1,9 +1,6 @@
 import re 
 
 import pytesseract
-import cv2
-
-#pytesseract.pytesseract.tesseract_cmd = r'C:\Users\NikodemOlsavsky\AppData\Local\Programs\Tesseract-OCR'
 
 
 def extract_text_and_numbers_with_spaces(text):
@@ -20,7 +17,7 @@ def read_book_text(image, book_box):
         roi = cv2.rotate(roi, cv2.ROTATE_90_COUNTERCLOCKWISE)
     """
     # Use pytesseract to read text from the ROI
-    text = pytesseract.image_to_string(roi, config='--psm 5')
+    text = pytesseract.image_to_string(roi, config='--psm 1')
     return text
 
 def detect_text_on_objects(processed_image, detected_objects):

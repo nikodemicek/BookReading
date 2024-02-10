@@ -21,8 +21,9 @@ RUN pip install torch==2.1.0+cpu torchvision==0.16.0+cpu -f https://download.pyt
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the current directory contents into the container at /usr/src/app
-COPY . .
+
+# Copy your application files to the container
+COPY ./app .
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
@@ -31,4 +32,4 @@ EXPOSE 80
 ENV NAME dockerenv
 
 # Run app.py when the container launches
-CMD ["python", "app/main.py"]
+CMD ["python", "main.py"]

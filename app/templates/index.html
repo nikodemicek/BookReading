@@ -6,41 +6,22 @@
 </head>
 <body>
     <div id="upload-area">
-    <form action="/" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" id="file">
-        <input type="submit" value="Upload Image" name="submit">
-    </form>
+        <form id="upload-form" enctype="multipart/form-data" method="post" >
+            <input type="file" name="file" id="file">
+            <input type="submit" value="Upload Image" name="submit">
+        </form>
     </div>
 
-    <div id="table_container">
-    {% if data %}
+    <div id="results"></div>
+
+    <div id="table-container" style="display: none;">
         <h2>Detected Books</h2>
         <table>
-            <!-- Table Headers -->
-            <tr>
-                <th>Thumbnail</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Description</th>
-                <th>Avg Rating</th>
-                <th>Ratings count</th>
-            </tr>
-
-            <!-- Table Rows -->
-            {% for item in data %}
-                <tr>
-                    <td><img src="{{ item.thumbnail }}" alt="Book Cover"></td>
-                    <td>{{ item.title }}</td>
-                    <td>{{ item.author }}</td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.rating }}</td>
-                    <td>{{ item.rating_count }}</td>
-                </tr>
-            {% endfor %}
+            <!-- Table will be populated with JavaScript -->
         </table>
-    {% endif %}
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>

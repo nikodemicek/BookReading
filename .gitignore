@@ -22,6 +22,20 @@ _ext
 build/
 dist/
 wheels/
+.env
+.venv
+.eggs
+lib/
+lib64/
+*.egg
+*.egg-info
+*.so
+*.pyc
+*.pyd
+*.pyo
+*.pyz
+*.pyw
+*.pyi
 
 # pytorch/python/numpy formats
 *.pth
