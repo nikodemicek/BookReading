@@ -1,7 +1,8 @@
 from flask import  Flask, request, render_template, flash, redirect, jsonify
 from flask_rq2 import RQ
+from rq.job import Job
+from rq import Queue
 
-from werkzeug.utils import secure_filename
 import os
 from io import BytesIO
 import logging
@@ -16,10 +17,6 @@ logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 rq = RQ(app)
 
-from rq.job import Job
-from rq import Queue
-from worker import conn
-
 redis_url = os.environ.get('REDIS_URL')
 
 app.secret_key =  os.environ.get('FLASK_SECRET_KEY')
@@ -30,7 +27,6 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 app.config['RQ_REDIS_URL'] = redis_url
 
 q = Queue(connection=conn)
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
