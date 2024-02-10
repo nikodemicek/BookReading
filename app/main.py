@@ -3,6 +3,7 @@ from flask_rq2 import RQ
 
 from werkzeug.utils import secure_filename
 import os
+from io import BytesIO
 import logging
 
 from utils.config import allowed_file
@@ -45,12 +46,12 @@ def index():
             return redirect(request.url)
         
         if allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(file_path)
+            # Use BytesIO to read the file in memory
+            in_memory_file = BytesIO()
+            file.save(in_memory_file)
 
             # Enqueue the background job
-            job = q.enqueue(f=process_image_task, args=(file_path,), result_ttl=5000, job_timeout=600)
+            job = q.enqueue(f=process_image_task, args=(in_memory_file,), result_ttl=5000, job_timeout=600)
             return jsonify({"job_id": job.get_id()}), 202
 
         else:
