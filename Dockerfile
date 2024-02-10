@@ -19,14 +19,13 @@ RUN apt-get update && apt-get install -y \
 RUN pip install --upgrade pip
 RUN pip install torch==2.1.0+cpu torchvision==0.16.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-
+RUN pip install --no-cache-dir -r requirements.txt 
 
 # Copy your application files to the container
 COPY ./app .
 
 # download the Detectron2 model weights
-RUN python object_detector.py
+RUN python -c "from object_detector import get_model_weights; get_model_weights()"
 
 
 # Make port 80 available to the world outside this container
