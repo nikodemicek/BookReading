@@ -49,7 +49,7 @@ def index():
             # Use BytesIO to read the file in memory
             in_memory_file = BytesIO()
             file.save(in_memory_file)
-
+            del file
             # Enqueue the background job
             job = q.enqueue(f=process_image_task, args=(in_memory_file,), result_ttl=5000, job_timeout=600)
             return jsonify({"job_id": job.get_id()}), 202
