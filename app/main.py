@@ -10,7 +10,6 @@ from utils.config import allowed_file
 from worker import conn
 from tasks import process_image_task
 
-
 logging.basicConfig(level=logging.INFO)
 
 
@@ -31,6 +30,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 app.config['RQ_REDIS_URL'] = redis_url
 
 q = Queue(connection=conn)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
