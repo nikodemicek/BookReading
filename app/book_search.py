@@ -3,8 +3,7 @@ import re
 from bs4 import BeautifulSoup
 import openai
 import json
-
-from key import get_openai_key, get_google_key
+import os
 
 
 def jsonify_python_list(py_list):
@@ -53,7 +52,7 @@ def get_books_info(list_of_books):
     
     return predicted_books
 
-openai.api_key = get_openai_key()
+openai.api_key = os.environ.get('OPEN_AI_KEY')
 
 def refine_search_term(query):
     response = openai.ChatCompletion.create(
@@ -76,7 +75,7 @@ def refine_search_term(query):
     return response.choices[0].message.content
 
 # Your API Key
-GOOGLE_API_KEY = get_google_key()
+GOOGLE_API_KEY = os.environ.get('GOOGLE_BOOKS_KEY')
 
 def search_book(search_string):
     """
