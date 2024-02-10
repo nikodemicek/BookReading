@@ -17,6 +17,8 @@ def get_model_weights():
 
     return predictor
 
+predictor = get_model_weights()
+
 
 def detect_objects(image, object_class):
     """
@@ -33,10 +35,8 @@ def detect_objects(image, object_class):
         The bounding boxes of the detected objects.
     """
     # Make prediction
-    predictor = get_model_weights()
     outputs = predictor(image)
     del image
-    del predictor
 
     object_indices = [i for i, label in enumerate(outputs["instances"].pred_classes) if label == object_class]
     object_boxes = outputs["instances"].pred_boxes.tensor[object_indices]
@@ -45,4 +45,4 @@ def detect_objects(image, object_class):
 
 
 if __name__ == "__main__":
-    get_model_weights()
+    pass
