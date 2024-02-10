@@ -25,7 +25,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY ./app .
 
 # download the Detectron2 model weights
-RUN python -c "from object_detector import get_model_weights; get_model_weights()"
+RUN python object_detector.py
 
 
 # Make port 80 available to the world outside this container

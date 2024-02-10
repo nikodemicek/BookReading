@@ -17,6 +17,8 @@ def get_model_weights():
 
     return predictor
 
+predictor = get_model_weights()
+
 
 def detect_objects(image, object_class):
     """
