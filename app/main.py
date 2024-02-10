@@ -8,7 +8,6 @@ import logging
 from utils.config import allowed_file
 from worker import conn
 from tasks import process_image_task
-from key import get_flask_secret_key
 
 
 logging.basicConfig(level=logging.INFO)
@@ -23,7 +22,7 @@ from worker import conn
 
 redis_url = os.environ.get('REDIS_URL')
 
-app.secret_key =  get_flask_secret_key()
+app.secret_key =  os.environ.get('FLASK_SECRET_KEY')
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
