@@ -59,7 +59,7 @@ def index():
 @app.route('/results/<job_id>', methods=['GET'])
 def get_results(job_id):
     job = Job.fetch(job_id, connection=conn)
-    logging.info(f'Job status: {job.get_status()}')
+    #logging.info(f'Job status: {job.get_status()}')
     if job.is_finished:
         return jsonify(job.result), 200
     elif job.is_failed:

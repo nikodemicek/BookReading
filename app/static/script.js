@@ -28,14 +28,11 @@ function checkJobStatus(jobId) {
         success: function(response) {
             console.log("job status: ", response.status);
             if (response.status === 'Processing') {
-                document.getElementById('spinner').style.display = 'block';
                 // Poll every 2 seconds
                 setTimeout(function() { checkJobStatus(jobId); }, 2000);
             } else {
                 // Show table container and populate data
                 $('#table-container').show();
-                // Hide spinner
-                document.getElementById('spinner').style.display = 'none';
                 populateTable(response);
             }
         },
