@@ -2,9 +2,11 @@ from flask import  Flask, request, render_template, flash, redirect, jsonify
 from flask_rq2 import RQ
 from rq.job import Job
 from rq import Queue
+from werkzeug.utils import secure_filename
 
 import os
 from io import BytesIO
+import boto3
 import logging
 
 from utils.config import allowed_file
@@ -26,6 +28,10 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 # RQ Configuration
 app.config['RQ_REDIS_URL'] = redis_url
 
+# AWS S3 Setup
+s3 = boto3.client('s3', aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"))
+BUCKET_NAME = 'bookshelf-dropzone--eun1-az1--x-s3'
+
 q = Queue(connection=conn)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -42,16 +48,23 @@ def index():
             return redirect(request.url)
         
         if allowed_file(file.filename):
-            # Use BytesIO to read the file in memory
-            in_memory_file = BytesIO()
-            file.save(in_memory_file)
-            del file
 
-            # Convert BytesIO to byte string
-            byte_string = in_memory_file.getvalue()
+            filename = secure_filename(file.filename)
+            # Save file to S3 with an expiration date
+            s3.upload_fileobj(
+                file,
+                BUCKET_NAME,
+                filename,
+                ExtraArgs={
+                    'Expires': 'expiry_date'  # Set appropriate expiry date
+                }
+            )
+            file_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{filename}"
+
+            del file
             
             # Enqueue the background job
-            job = q.enqueue(f=process_image_task, args=(byte_string,), result_ttl=5000, job_timeout=600)
+            job = q.enqueue(f=process_image_task, args=(file_url,), result_ttl=5000, job_timeout=600)
             return jsonify({"job_id": job.get_id()}), 202
 
         else:
