@@ -11,7 +11,7 @@ from utils.config import allowed_file
 from worker import conn
 from tasks import process_image_task
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 
 app = Flask(__name__)
