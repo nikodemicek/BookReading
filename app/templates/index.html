@@ -12,13 +12,14 @@
         </form>
     </div>
 
-    <div id="results"></div> 
-    <div id="table-container" style="display: none;">
-        <h2>Detected Books</h2>
-        <table>
-            <!-- Table will be populated with JavaScript -->
-        </table>
-    </div>
+    <div id="results">
+        <div id="table-container" style="display: none;">
+            <h2>Detected Books</h2>
+            <table>
+                <!-- Table will be populated with JavaScript -->
+            </table>
+        </div>
+    </div> 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
