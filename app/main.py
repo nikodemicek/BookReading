@@ -32,6 +32,11 @@ app.config['RQ_REDIS_URL'] = redis_url
 s3 = boto3.client('s3', aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"))
 BUCKET_NAME = 'bookshelf-dropzone--eun1-az1--x-s3'
 
+from datetime import datetime, timedelta
+
+# Calculate an expiration date, for example, 7 days from now
+expires_date = datetime.now() + timedelta(days=7)
+
 q = Queue(connection=conn)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -56,7 +61,7 @@ def index():
                 BUCKET_NAME,
                 filename,
                 ExtraArgs={
-                    'Expires': 'expiry_date'  # Set appropriate expiry date
+                    'Expires': expires_date
                 }
             )
             file_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{filename}"
