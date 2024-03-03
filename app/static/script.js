@@ -28,7 +28,6 @@ function checkJobStatus(jobId) {
         success: function(response) {
             console.log("job status: ", response.status);
             if (response.status === 'Processing') {
-                document.getElementById('spinner').style.display = 'block';
                 // Poll every 2 seconds
                 setTimeout(function() { checkJobStatus(jobId); }, 2000);
             } else {
