@@ -2,7 +2,10 @@ import numpy as np
 import cv2
 from io import BytesIO
 
-def process_image_in_memory(in_memory_file):
+def process_image_in_memory(byte_string):
+
+    in_memory_file = BytesIO(byte_string)
+
     # Move the cursor to the beginning of the BytesIO buffer
     in_memory_file.seek(0)
     

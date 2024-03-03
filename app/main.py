@@ -46,8 +46,12 @@ def index():
             in_memory_file = BytesIO()
             file.save(in_memory_file)
             del file
+
+            # Convert BytesIO to byte string
+            byte_string = in_memory_file.getvalue()
+            
             # Enqueue the background job
-            job = q.enqueue(f=process_image_task, args=(in_memory_file,), result_ttl=5000, job_timeout=600)
+            job = q.enqueue(f=process_image_task, args=(byte_string,), result_ttl=5000, job_timeout=600)
             return jsonify({"job_id": job.get_id()}), 202
 
         else:
