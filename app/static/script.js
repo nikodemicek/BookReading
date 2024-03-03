@@ -33,8 +33,6 @@ function checkJobStatus(jobId) {
             } else {
                 // Show table container and populate data
                 $('#table-container').show();
-                // Hide spinner
-                document.getElementById('spinner').style.display = 'none';
                 populateTable(response);
             }
         },
