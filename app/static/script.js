@@ -14,8 +14,11 @@ $(document).ready(function() {
                 console.log("job status checked!");
                 checkJobStatus(response.job_id);
             },
-            error: function() {
-                $('#results').html('Error submitting file.');
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log("Error submitting file: " + textStatus + ", " + errorThrown);
+                console.log("Response status: " + jqXHR.status + " - " + jqXHR.statusText);
+                console.log("Error details:", jqXHR.responseText);
+                $('#results').html('Error submitting file. ' + textStatus + ", " + errorThrown);
             }
         });
     });
