@@ -5,7 +5,6 @@ from rq import Queue
 from werkzeug.utils import secure_filename
 
 import os
-from io import BytesIO
 import boto3
 import logging
 
@@ -30,7 +29,7 @@ app.config['RQ_REDIS_URL'] = redis_url
 
 # AWS S3 Setup
 s3 = boto3.client('s3', aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"))
-BUCKET_NAME = 'bookshelf-dropzone--eun1-az1--x-s3'
+BUCKET_NAME = 'bookshelfscanner-bucket'
 
 from datetime import datetime, timedelta
 
@@ -55,6 +54,7 @@ def index():
         if allowed_file(file.filename):
 
             filename = secure_filename(file.filename)
+
             # Save file to S3 with an expiration date
             s3.upload_fileobj(
                 file,
