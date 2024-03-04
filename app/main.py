@@ -29,7 +29,7 @@ app.config['RQ_REDIS_URL'] = redis_url
 
 # AWS S3 Setup
 s3 = boto3.client('s3', aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"))
-BUCKET_NAME = 'bookshelfscanner-bucket'
+BUCKET_NAME = os.environ.get("BUCKET_NAME")
 
 from datetime import datetime, timedelta
 

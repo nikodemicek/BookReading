@@ -8,7 +8,7 @@ def process_image_in_memory(file_key):
 
     # Initialize S3 client
     s3 = boto3.client('s3', aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"))
-    BUCKET_NAME = 'bookshelfscanner-bucket'
+    BUCKET_NAME = os.environ.get("BUCKET_NAME")
     
     # Create a BytesIO object to hold the file data
     file_obj = BytesIO()
