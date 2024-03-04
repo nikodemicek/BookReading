@@ -10,19 +10,14 @@ def process_image_in_memory(file_key):
     s3 = boto3.client('s3', aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"))
     BUCKET_NAME = os.environ.get("BUCKET_NAME")
     
-    # Create a BytesIO object to hold the file data
-    file_obj = BytesIO()
-    
-    # Download file from S3 into the BytesIO object
-    s3.download_fileobj(Bucket=BUCKET_NAME, Key=file_key, Fileobj=file_obj)
-    
-    # Move the cursor to the beginning of the BytesIO object
-    file_obj.seek(0)
-    
-    # Read the file's content into a bytes array
-    file_bytes = np.asarray(bytearray(file_obj.read()), dtype=np.uint8)
-    
-    # Decode the bytes array into an OpenCV image
-    image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    # Fetch the image from S3
+    response = s3.get_object(Bucket=BUCKET_NAME, Key=file_key)
+    image_content = response['Body'].read()
+
+    # Convert the image data to a numpy array
+    image_array = np.asarray(bytearray(image_content), dtype=np.uint8)
+
+    # Use OpenCV to read the image data
+    image = cv2.imdecode(image_array, -1)  # The '-1' flag tells OpenCV to read the image as is (including alpha channel if present)
     
     return image
