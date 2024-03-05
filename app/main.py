@@ -64,10 +64,10 @@ def index():
                     'Expires': expires_date
                 }
             )
-            file_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{filename}"
-            
+
+            logging.info(f'Processing file {filename} from {BUCKET_NAME}')
             # Enqueue the background job
-            job = q.enqueue(f=process_image_task, args=(file_url,), result_ttl=5000, job_timeout=600)
+            job = q.enqueue(f=process_image_task, args=(filename, BUCKET_NAME), result_ttl=5000, job_timeout=600)
             return jsonify({"job_id": job.get_id()}), 202
 
         else:

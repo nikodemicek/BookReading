@@ -6,9 +6,9 @@ from text_detector import detect_text_on_objects
 from book_search import get_books_info, display_book_info
 
 
-def process_image_task(in_memory_file):
+def process_image_task(file_key, bucket_name):
 
-    processed_image = process_image_in_memory(in_memory_file)
+    processed_image = process_image_in_memory(file_key, bucket_name)
     logging.info(f'Image processed')
     detected_objects = detect_objects(processed_image, 73)
     logging.info(f'Objects detected')

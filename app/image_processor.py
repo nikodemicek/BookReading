@@ -2,21 +2,21 @@ import numpy as np
 import os
 import cv2
 import boto3
-from io import BytesIO
+import logging
 
-def process_image_in_memory(file_key):
+def process_image_in_memory(file_key, bucket_name):
     """
     Fetch an image from S3 and process it in memory.
     """
     AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-    BUCKET_NAME = os.environ.get("BUCKET_NAME")
+    #BUCKET_NAME = os.environ.get("BUCKET_NAME")
 
     # Initialize S3 client
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
     
     # Fetch the image from S3
-    response = s3.get_object(Bucket=BUCKET_NAME, Key=file_key)
+    response = s3.get_object(Bucket=bucket_name, Key=file_key)
     image_content = response['Body'].read()
 
     # Convert the image data to a numpy array
