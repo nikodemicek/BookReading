@@ -34,7 +34,7 @@ BUCKET_NAME = os.environ.get("BUCKET_NAME")
 from datetime import datetime, timedelta
 
 # Calculate an expiration date, for example, 7 days from now
-expires_date = datetime.now() + timedelta(days=7)
+expires_date = datetime.now() + timedelta(days=1)
 
 q = Queue(connection=conn)
 

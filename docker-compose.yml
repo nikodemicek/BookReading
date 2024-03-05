@@ -10,6 +10,7 @@ services:
       - redis
     environment:
       - RQ_REDIS_URL=${REDIS_URL}
+    stop_signal: SIGINT 
     networks:
       - mynetwork
   worker:
