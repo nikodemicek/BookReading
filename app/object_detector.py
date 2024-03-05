@@ -36,7 +36,6 @@ def detect_objects(image, object_class):
     """
     # Make prediction
     outputs = predictor(image)
-    del image
 
     object_indices = [i for i, label in enumerate(outputs["instances"].pred_classes) if label == object_class]
     object_boxes = outputs["instances"].pred_boxes.tensor[object_indices]

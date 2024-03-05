@@ -5,10 +5,15 @@ import boto3
 from io import BytesIO
 
 def process_image_in_memory(file_key):
+    """
+    Fetch an image from S3 and process it in memory.
+    """
+    AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+    BUCKET_NAME = os.environ.get("BUCKET_NAME")
 
     # Initialize S3 client
-    s3 = boto3.client('s3', aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"))
-    BUCKET_NAME = os.environ.get("BUCKET_NAME")
+    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
     
     # Fetch the image from S3
     response = s3.get_object(Bucket=BUCKET_NAME, Key=file_key)

@@ -65,8 +65,6 @@ def index():
                 }
             )
             file_url = f"https://{BUCKET_NAME}.s3.amazonaws.com/{filename}"
-
-            del file
             
             # Enqueue the background job
             job = q.enqueue(f=process_image_task, args=(file_url,), result_ttl=5000, job_timeout=600)
