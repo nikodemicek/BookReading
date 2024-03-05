@@ -27,7 +27,6 @@ COPY ./app .
 # download the Detectron2 model weights
 RUN python object_detector.py
 
-
 # Make port 80 available to the world outside this container
 EXPOSE 80
 

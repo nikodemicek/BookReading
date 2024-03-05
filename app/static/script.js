@@ -34,6 +34,7 @@ function checkJobStatus(jobId) {
                 // Poll every 2 seconds
                 setTimeout(function() { checkJobStatus(jobId); }, 2000);
             } else {
+                console.log("Populating the table");
                 // Show table container and populate data
                 $('#table-container').show();
                 populateTable(response);
